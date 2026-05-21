@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MB-800 Exam Trainer v7 — Business Central</title>
+<style>
+  :root {
+    --bg: #09090b; --surface: #18181b; --surface2: #27272a; --border: #3f3f46;
+    --text: #f4f4f5; --text2: #a1a1aa; --text3: #71717a;
+    --amber: #fbbf24; --amber-dim: rgba(251,191,36,.1); --amber-border: rgba(251,191,36,.3);
+    --green: #34d399; --green-dim: rgba(52,211,153,.1); --green-border: rgba(52,211,153,.4);
+    --red: #f87171; --red-dim: rgba(248,113,113,.1); --red-border: rgba(248,113,113,.4);
+    --blue: #60a5fa; --blue-dim: rgba(96,165,250,.1); --blue-border: rgba(96,165,250,.3);
+    --purple: #c084fc; --purple-dim: rgba(192,132,252,.1); --purple-border: rgba(192,132,252,.3);
+    --teal: #2dd4bf; --teal-dim: rgba(45,212,191,.1); --teal-border: rgba(45,212,191,.3);
+    --orange: #fb923c; --orange-dim: rgba(251,146,60,.1); --orange-border: rgba(251,146,60,.3);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI','SF Pro Display',system-ui,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+  .container { max-width:720px; margin:0 auto; padding:16px; }
+  @media(min-width:768px) { .container { padding:32px; } }
+  .btn { display:inline-flex; align-items:center; justify-content:center; padding:12px 24px; border-radius:12px; font-weight:600; font-size:15px; border:none; cursor:pointer; transition:all .15s; }
+  .btn:active { transform:scale(.98); }
+  .btn-primary { background:var(--amber); color:#09090b; }
+  .btn-primary:hover { background:#fcd34d; }
+  .btn-primary:disabled { background:var(--surface2); color:var(--text3); cursor:not-allowed; transform:none; }
+  .btn-secondary { background:var(--surface); color:var(--text); border:1px solid var(--border); }
+  .btn-secondary:hover { background:var(--surface2); }
+  .btn-full { width:100%; }
+  .badge { display:inline-flex; align-items:center; padding:2px 8px; border-radius:6px; font-size:12px; font-weight:500; cursor:default; }
+  .badge-topic { background:var(--surface); color:var(--text3); border:1px solid var(--border); }
+  .badge-single { background:var(--blue-dim); color:var(--blue); border:1px solid var(--blue-border); }
+  .badge-multi { background:var(--purple-dim); color:var(--purple); border:1px solid var(--purple-border); }
+  .badge-ordering { background:var(--teal-dim); color:var(--teal); border:1px solid var(--teal-border); }
+  .badge-matching { background:var(--orange-dim); color:var(--orange); border:1px solid var(--orange-border); }
+  .badge-hotspot { background:rgba(251,191,36,.15); color:var(--amber); border:1px solid var(--amber-border); }
+  .badge-cert { background:var(--amber-dim); color:var(--amber); border:1px solid var(--amber-border); padding:4px 14px; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; border-radius:999px; }
+  .badge-filter { cursor:pointer; transition:all .15s; }
+  .badge-filter:hover { opacity:.8; }
+  .badge-filter.active { box-shadow:0 0 0 2px var(--amber); }
+  .topic-grid { display:grid; grid-template-columns:1fr; gap:8px; }
+  @media(min-width:500px) { .topic-grid { grid-template-columns:1fr 1fr; } }
+  .topic-btn { text-align:left; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:var(--surface); cursor:pointer; transition:all .15s; }
+  .topic-btn:hover { border-color:var(--text3); }
+  .topic-btn.active { border-color:var(--amber-border); background:var(--amber-dim); }
+  .topic-btn .name { font-size:14px; font-weight:500; color:var(--text2); }
+  .topic-btn.active .name { color:var(--amber); }
+  .topic-btn .sub { font-size:12px; color:var(--text3); margin-top:2px; }
+  .topic-btn .count { font-size:11px; padding:1px 6px; border-radius:4px; background:var(--surface2); color:var(--text3); }
+  .topic-btn.active .count { background:var(--amber-dim); color:var(--amber); }
+  .topic-row { display:flex; justify-content:space-between; align-items:center; }
+  .settings { padding:16px; border-radius:12px; border:1px solid var(--border); background:rgba(24,24,27,.5); margin-bottom:24px; }
+  .settings label { display:flex; align-items:center; gap:10px; cursor:pointer; font-size:14px; color:var(--text2); margin-bottom:8px; }
+  .settings label:last-child { margin-bottom:0; }
+  .settings input[type=checkbox] { accent-color:var(--amber); width:16px; height:16px; }
+  .settings select { background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:4px 8px; font-size:14px; color:var(--text); }
+  .start-grid { display:grid; grid-template-columns:1fr; gap:12px; }
+  @media(min-width:500px) { .start-grid { grid-template-columns:1fr 1fr; } }
+  .start-btn { padding:16px 24px; border-radius:12px; border:none; cursor:pointer; text-align:center; transition:all .15s; }
+  .start-btn:active { transform:scale(.98); }
+  .start-btn.practice { background:var(--amber); color:#09090b; }
+  .start-btn.practice:hover { background:#fcd34d; }
+  .start-btn.exam { background:var(--surface); color:var(--text); border:1px solid var(--border); }
+  .start-btn.exam:hover { background:var(--surface2); }
+  .start-btn .title { font-size:16px; font-weight:700; }
+  .start-btn .desc { font-size:12px; margin-top:4px; opacity:.7; }
+  .progress-track { width:100%; height:6px; background:var(--surface2); border-radius:999px; overflow:hidden; margin-bottom:20px; }
+  .progress-fill { height:100%; background:var(--amber); border-radius:999px; transition:width .3s; }
+  .option { width:100%; text-align:left; padding:14px 16px; border-radius:12px; border:2px solid var(--border); background:#1e1e22; cursor:pointer; transition:all .2s; margin-bottom:10px; display:flex; align-items:flex-start; gap:12px; }
+  .option:hover:not(.locked) { border-color:#71717a; background:#2a2a30; }
+  .option.selected { border-color:var(--amber); background:rgba(251,191,36,.12); }
+  .option.correct { border-color:var(--green); background:rgba(52,211,153,.12); }
+  .option.wrong { border-color:var(--red); background:rgba(248,113,113,.12); }
+  .option.dimmed { border-color:rgba(63,63,70,.4); background:rgba(24,24,27,.3); opacity:.45; }
+  .option.locked { cursor:default; }
+  .option-letter { flex-shrink:0; width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; background:#333; color:#a1a1aa; }
+  .option.selected .option-letter { background:var(--amber); color:#09090b; }
+  .option.correct .option-letter { background:var(--green); color:#09090b; }
+  .option.wrong .option-letter { background:var(--red); color:#09090b; }
+  .option-text { font-size:14px; line-height:1.5; padding-top:3px; color:#e4e4e7; }
+  .ordering-item { width:100%; text-align:left; padding:14px 16px; border-radius:12px; border:2px solid var(--border); background:#1e1e22; margin-bottom:8px; display:flex; align-items:center; gap:12px; transition:all .2s; user-select:none; }
+  .ordering-item:not(.locked) { cursor:grab; }
+  .ordering-item:not(.locked):hover { border-color:#71717a; background:#2a2a30; }
+  .ordering-item:not(.locked):active { cursor:grabbing; }
+  .ordering-item.dragging { opacity:.5; border-color:var(--amber); }
+  .ordering-item.drag-over { border-color:var(--amber); border-style:dashed; }
+  .ordering-item.correct { border-color:var(--green); background:rgba(52,211,153,.12); }
+  .ordering-item.wrong { border-color:var(--red); background:rgba(248,113,113,.12); }
+  .ordering-item.locked { cursor:default; }
+  .ordering-num { flex-shrink:0; width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; background:#333; color:#a1a1aa; }
+  .ordering-item.correct .ordering-num { background:var(--green); color:#09090b; }
+  .ordering-item.wrong .ordering-num { background:var(--red); color:#09090b; }
+  .ordering-text { font-size:14px; line-height:1.5; color:#e4e4e7; flex:1; }
+  .drag-handle { color:var(--text3); font-size:16px; flex-shrink:0; }
+  .ordering-arrows { display:flex; flex-direction:column; gap:2px; flex-shrink:0; }
+  .ordering-arrows button { background:none; border:1px solid var(--border); border-radius:4px; width:24px; height:20px; cursor:pointer; color:var(--text3); font-size:10px; display:flex; align-items:center; justify-content:center; transition:all .15s; }
+  .ordering-arrows button:hover { border-color:var(--amber); color:var(--amber); background:var(--amber-dim); }
+  .match-item { padding:12px 16px; border-radius:10px; border:1px solid var(--border); background:#1e1e22; margin-bottom:6px; font-size:14px; line-height:1.5; color:#e4e4e7; }
+  .match-item.correct { border-color:var(--green); background:rgba(52,211,153,.08); }
+  .match-item.wrong { border-color:var(--red); background:rgba(248,113,113,.08); }
+  .explain { padding:16px; border-radius:12px; margin-bottom:20px; }
+  .explain.pass { border:1px solid var(--green-border); background:var(--green-dim); }
+  .explain.fail { border:1px solid var(--red-border); background:var(--red-dim); }
+  .explain-header { display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:14px; font-weight:600; }
+  .explain-body { font-size:14px; color:var(--text2); line-height:1.6; }
+  .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; font-size:14px; }
+  .topbar-quit { color:var(--text3); background:none; border:none; cursor:pointer; font-size:14px; }
+  .topbar-quit:hover { color:var(--text); }
+  .topbar-score { font-weight:600; }
+  .topbar-score.good { color:var(--green); }
+  .topbar-score.mid { color:var(--amber); }
+  .timer { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:8px; background:var(--surface2); font-size:13px; font-weight:600; color:var(--text2); }
+  .timer.warning { color:var(--red); background:var(--red-dim); }
+  .review-item { padding:12px; border-radius:10px; margin-bottom:8px; display:flex; align-items:flex-start; gap:8px; cursor:pointer; transition:all .15s; }
+  .review-item:hover { opacity:.85; }
+  .review-item.pass { border:1px solid rgba(52,211,153,.2); background:rgba(52,211,153,.04); }
+  .review-item.fail { border:1px solid rgba(248,113,113,.2); background:rgba(248,113,113,.04); }
+  .review-text { font-size:13px; color:var(--text2); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .review-answers { font-size:12px; margin-top:4px; }
+  .review-detail { padding:16px; border-radius:12px; border:1px solid var(--border); background:var(--surface); margin-bottom:16px; }
+  .review-detail h3 { font-size:15px; margin-bottom:12px; color:var(--text); }
+  .stat-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:24px; }
+  @media(min-width:500px) { .stat-grid { grid-template-columns:repeat(4,1fr); } }
+  .stat-card { padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--surface); text-align:center; }
+  .stat-val { font-size:24px; font-weight:700; }
+  .stat-label { font-size:11px; color:var(--text3); margin-top:2px; text-transform:uppercase; letter-spacing:.05em; }
+  .text-center { text-align:center; }
+  .mb-2 { margin-bottom:8px; }
+  .mb-4 { margin-bottom:16px; }
+  .mb-6 { margin-bottom:24px; }
+  h1 { font-size:2.2rem; font-weight:700; letter-spacing:-.02em; }
+  h1 .accent { color:var(--amber); }
+  .subtitle { color:var(--text3); font-size:14px; }
+  .btn-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .filter-row { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+  .section-title { font-size:12px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:.08em; }
+  .login-wrap { max-width:400px; margin:0 auto; }
+  .login-title { font-size:1.6rem; font-weight:700; text-align:center; margin-bottom:8px; }
+  .login-sub { font-size:14px; color:var(--text3); text-align:center; margin-bottom:24px; }
+  .user-list { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
+  .user-btn { display:flex; align-items:center; gap:12px; padding:14px 16px; border-radius:12px; border:2px solid var(--border); background:#1e1e22; cursor:pointer; transition:all .15s; text-align:left; width:100%; color:var(--text); font-size:15px; }
+  .user-btn:hover { border-color:var(--amber-border); background:var(--amber-dim); }
+  .user-avatar { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; background:var(--surface2); color:var(--text3); flex-shrink:0; }
+  .user-btn:hover .user-avatar { background:var(--amber); color:#09090b; }
+  .user-info { flex:1; min-width:0; }
+  .user-name { font-weight:600; }
+  .user-stats-line { font-size:12px; color:var(--text3); margin-top:2px; }
+  .new-user-row { display:flex; gap:8px; }
+  .new-user-input { flex:1; padding:12px 16px; border-radius:12px; border:2px solid var(--border); background:#1e1e22; color:var(--text); font-size:15px; outline:none; transition:border-color .15s; }
+  .new-user-input:focus { border-color:var(--amber); }
+  .delete-user { background:none; border:none; color:var(--text3); cursor:pointer; font-size:16px; padding:4px 8px; border-radius:6px; transition:all .15s; }
+  .delete-user:hover { color:var(--red); background:var(--red-dim); }
+  .smart-grid { display:grid; grid-template-columns:1fr; gap:8px; }
+  @media(min-width:500px) { .smart-grid { grid-template-columns:1fr 1fr; } }
+  .smart-btn { text-align:left; padding:14px 16px; border-radius:12px; border:1px solid var(--border); background:var(--surface); cursor:pointer; transition:all .15s; }
+  .smart-btn:hover { border-color:var(--amber-border); background:var(--amber-dim); }
+  .smart-btn .s-icon { font-size:20px; margin-bottom:4px; }
+  .smart-btn .s-title { font-size:14px; font-weight:600; color:var(--text); }
+  .smart-btn .s-desc { font-size:12px; color:var(--text3); margin-top:2px; }
+  .smart-btn.disabled { opacity:.4; cursor:not-allowed; }
+  .smart-btn.disabled:hover { border-color:var(--border); background:var(--surface); }
+  .explain-links { margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,.15); display:flex; flex-wrap:wrap; gap:8px; }
+  .explain-links a { display:inline-flex; align-items:center; gap:4px; color:#60a5fa; font-size:13px; font-weight:600; text-decoration:none; padding:5px 12px; border-radius:8px; background:rgba(96,165,250,.1); border:1px solid rgba(96,165,250,.25); transition:all .15s; }
+  .explain-links a:hover { background:rgba(96,165,250,.2); border-color:rgba(96,165,250,.5); color:#93bbfc; }
+  .hotspot-container { position: relative; margin: 20px auto; max-width: 800px; }
+  .hotspot-image { width: 100%; border-radius: 8px; border: 1px solid var(--border); }
+  .hotspot-area { position: absolute; cursor: pointer; transition: all 0.2s; }
+  .hotspot-area:hover { background: rgba(251, 191, 36, 0.2); border: 2px solid var(--amber); }
+  .hotspot-area.selected { background: rgba(52, 211, 153, 0.3); border: 2px solid var(--green); }
+  .hotspot-area.correct { background: rgba(52, 211, 153, 0.4); border: 2px solid var(--green); }
+  .hotspot-area.wrong { background: rgba(248, 113, 113, 0.4); border: 2px solid var(--red); }
+  .hotspot-label { position: absolute; font-size: 12px; color: var(--text); background: var(--surface); padding: 2px 6px; border-radius: 4px; pointer-events: none; }
+  .changelog-toggle { margin-bottom: 20px; }
+  .changelog-content { padding:16px; border-radius:12px; border:1px solid var(--border); background:var(--surface); margin-top:12px; }
+  .changelog-content h3 { color:var(--amber); margin-bottom:12px; font-size:16px; }
+  .changelog-content ul { list-style:disc; padding-left:20px; }
+  .changelog-content li { margin-bottom:8px; line-height:1.6; }
+  .case-study-box { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:12px; margin:16px 0; font-size:13px; color:var(--text2); }
+  .case-study-header { font-weight:600; color:var(--amber); margin-bottom:6px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+  .case-study-content { display:none; margin-top:8px; line-height:1.5; }
+  .case-study-box.expanded .case-study-content { display:block; }
+</style>
+</head>
+<body>
+<div class="container" id="app"></div>
+
+<script>
+// ============================================
+// MB-800 Exam Trainer v7 - KORRIGIERTE VERSION
+// Fix: users.map is not a function
+// ============================================
+
+// --- CASE STUDIES ---
+const CASE_STUDIES = {
+  'Fabrikam': 'Fabrikam, Inc. is a manufacturing company that produces and sells furniture. The company uses Dynamics 365 Business Central for financial management, sales, and inventory. Fabrikam has multiple warehouses and uses advanced costing methods. The company recently implemented a new approval workflow for purchase orders over $1,000.',
+  'Northwind Traders': 'Northwind Traders is a global importer and exporter of specialty foods. The company has customers and vendors worldwide and uses multiple currencies. Northwind Traders uses Business Central to manage its complex supply chain and international sales. The company has strict credit limits for customers and uses payment terms extensively.',
+  'Wide World Importers': 'Wide World Importers (WWI) is a wholesale distributor of novelty items. The company has a large product catalog with thousands of items. WWI uses Business Central for inventory management, sales, and purchasing. The company has implemented dimension analysis for profitability tracking by product category and salesperson.',
+  'Best for You Organics': 'Best for You Organics is a health food company that produces organic snacks. The company uses Business Central for production planning, quality control, and traceability. Best for You Organics has strict compliance requirements and uses lot tracking for all raw materials and finished goods.'
+};
+
+// --- QUESTIONS ARRAY (v7) ---
+const Q = [
+// ===== TOPIC 1 - KORRIGIERTE FRAGEN =====
+{id:1,topic:"Topic 1",num:2,type:"single",text:"A company uses Dynamics 365 Business Central. When users create sales documents, the system must display an alert that shows the customer's remaining credit. The alert must also notify the user if the customer has any overdue payments. You need to configure a credit limit and overdue payment warning. What should you do?",options:[{l:"A",t:"Configure the Block Customer field."},{l:"B",t:"Configure the Late Payment Predict extension."},{l:"C",t:"Select Both Warnings in the Credit Warnings field."},{l:"D",t:"Enable the Exact Cost Reversing Mandatory field."}],answer:["C"],explain:"The Credit Warnings field on the Sales & Receivables Setup page can be set to 'Both Warnings' to show both credit limit and overdue balance warnings when creating sales documents.<div class=explain-links><a href=https://learn.microsoft.com/en-us/dynamics365/business-central/sales-setup-sales target=_blank class=explain-links-a>Sales Setup ↗</a> <a href=https://learn.microsoft.com/en-us/dynamics365/business-central/sales-how-sell-products target=_blank class=explain-links-a>Sales Process ↗</a></div>"},
+{id:2,topic:"Topic 1",num:3,type:"single",text:"You configure a cloud-based printer in Dynamics 365 Business Central. Purchase orders printed by users must automatically print to the cloud-based printer. You need to create a setup record for the user, report, and printer combination. On which page should you create the setup record?",options:[{l:"A",t:"Printer Selections"},{l:"B",t:"Printer Management"},{l:"C",t:"Report Layout Selection"},{l:"D",t:"Report Selection – Purchase"},{l:"E",t:"Document Sending Profiles"}],answer:["A"],explain:"The Printer Selections page is used to define which printer is used for specific reports and users.<div class=explain-links><a href=https://learn.microsoft.com/en-us/dynamics365/business-central/ui-specify-printer-selection-reports target=_blank class=explain-links-a>Printer Setup ↗</a></div>"},
+{id:3,topic:"Topic 1",num:4,type:"single",text:"You are implementing Dynamics 365 Business Central Online. Users must be added to Business Central for the first time. You need to add the users. Which action should you use?",options:[{l:"A",t:"Get New Users from Microsoft 365"},{l:"B",t:"Create a new entry on the User Setup page"},{l:"C",t:"Update Users from Microsoft 365"},{l:"D",t:"Import User Groups"}],answer:["C"],explain:"In current BC versions, 'Update Users from Microsoft 365' is the action to import users (both new and existing). The former 'Get New Users' action has been consolidated into this single action.<div class=explain-links><a href=https://learn.microsoft.com/en-us/dynamics365/business-central/ui-how-users-permissions target=_blank class=explain-links-a>User Management ↗</a></div>"},
+{id:11,topic:"Topic 1",num:18,type:"single",text:"A company uses Dynamics 365 Business Central to record payments for vendors. You are onboarding a new vendor. You must create a unique number series for payments from the vendor. No other vendors will use the new number series. You need to configure the system. What should you use?",options:[{l:"A",t:"Vendors"},{l:"B",t:"General Journals"},{l:"C",t:"General Journal template"},{l:"D",t:"Payment journals"},{l:"E",t:"Workflow"}],answer:["C"],explain:"General Journal Templates (not batches) allow unique number series per template. This is the correct way to assign a dedicated number series for a specific vendor's payments.<div class=explain-links><a href=https://learn.microsoft.com/en-us/dynamics365/business-central/ui-create-number-series target=_blank class=explain-links-a>Number Series ↗</a> <a href=https://learn.microsoft.com/en-us/dynamics365/business-central/ui-work-general-journals target=_blank class=explain-links-a>General Journals ↗</a></div>"},
+{id:48,topic:"Topic 2",num:28,type:"single",text:"Check G/L Account Usage is enabled. What must be true to delete a G/L account?",options:[{l:"A",t:"Cannot have a balance amount."},{l:"B",t:"Cannot be used in any posting groups or posting setup."},{l:"C",t:"Cannot be used in any account schedule."},{l:"D",t:"Must have ledger entries."}],answer:["B"],explain:"When 'Check G/L Account Usage' is enabled, an account can only be deleted if it is NOT used in any posting groups or posting setup. A balance of zero is not sufficient if the account is referenced in setup tables.<div class=explain-links><a href=https://learn.microsoft.com/en-us/dynamics365/business-central/finance-posting-groups target=_blank class=explain-links-a>Posting Groups ↗</a></div>"},
+{id:287,topic:"Topic 5",num:1,type:"single",text:"You need to configure security for Dynamics 365 Business Central objects. Which permission set should you use to grant read-only access to all tables?",options:[{l:"A",t:"D365 READ"},{l:"B",t:"D365 SECURITY"},{l:"C",t:"SUPER"},{l:"D",t:"D365 VIEW"}],answer:["A"],explain:"The D365 READ permission set grants read-only access to all tables in Business Central."},
+{id:291,topic:"Topic 12",num:1,type:"hotspot",text:"Click on the field where you enable dimension value posting validation in the General Ledger Setup.",image:"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjUwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI1MDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRkZGRiIvPgo8dGV4dCB4PSIyMDAiIHk9IjIwMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+R0wgU2V0dXAgU2V0dXBQYWdlPC90ZXh0Pgo8cmVjdCB4PSIyMDAiIHk9IjI0MCIgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iI0ZGRkZGRiIgcng9IjgiLz4KPHN2ZyB4PSIxMDAiIHk9IjMwMCIgd2lkdGg9IjYwMCIgaGVpZ2h0PSIyMDAiPgo8cmVjdCB3aWR0aD0iNjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0ZGRkZGRiIvPgo8dGV4dCB4PSIzMDAiIHk9IjEwMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiBmaWxsPSJibGFjayIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RGFpbWVuc2lvbiBWYWxpZGF0aW9uIE5ldyBQb3N0aW5nPC90ZXh0Pgo8L3N2Zz4KPC9zdmc+Cg==",hotspotAreas:[{id:"dimensionValidation",x:250,y:120,width:200,height:25,label:"Dimension Value Posting"}],answer:["dimensionValidation"],explain:"The 'Dimension Value Posting' field in General Ledger Setup enables validation of dimension values during posting.<div class=explain-links><a href=https://learn.microsoft.com/en-us/dynamics365/business-central/finance-dimensions target=_blank class=explain-links-a>Dimensions ↗</a></div>"}
+];
+
+// ============================================
+// STATE & CONFIGURATION
+// ============================================
+let state = { mode: 'menu', screen: 'login' };
+let pool = [...Q];
+let currentQ = null;
+let currentIndex = 0;
+let userAnswers = {};
+let score = 0;
+let timer = null;
+let timeLeft = 0;
+let activeUser = null;
+let users = [];
+let examMode = false;
+let examStartTime = null;
+
+// Settings
+const config = {
+  shuffle: true,
+  showExplain: true,
+  questionCount: 10,
+  topics: [],
+  types: [],
+  smartMode: null
+};
+
+// Topic Mapping (Deutsch)
+const topicNames = {
+  'Topic 1': 'Setup und Verwaltung',
+  'Topic 2': 'Finanzbuchhaltung',
+  'Topic 5': 'Sicherheit & Berechtigungen',
+  'Topic 12': 'Bank & Zahlungen'
+};
+
+const typeNames = {
+  single: 'Single Choice',
+  multi: 'Multi Choice',
+  hotspot: 'Hotspot'
+};
+
+// ============================================
+// UTF-8 VALIDATION (v7 FEATURE)
+// ============================================
+function validateUTF8(text) {
+  if (!text) return text;
+  const replacements = [
+    { from: /â€™/g, to: "'" },
+    { from: /â€“/g, to: "-" },
+    { from: /â€œ/g, to: '"' },
+    { from: /â€¢/g, to: "•" },
+    { from: /â€“/g, to: "—" },
+    { from: /Ã¤/g, to: "ä" },
+    { from: /Ã¶/g, to: "ö" },
+    { from: /Ã¼/g, to: "ü" },
+    { from: /ÃŸ/g, to: "ß" }
+  ];
+  replacements.forEach(r => text = text.replace(r.from, r.to));
+  return text;
+}
+
+// Apply UTF-8 validation to all questions
+Q.forEach(q => {
+  q.text = validateUTF8(q.text);
+  q.explain = validateUTF8(q.explain || '');
+  if (q.options) q.options.forEach(opt => opt.t = validateUTF8(opt.t));
+});
+
+// ============================================
+// USER MANAGEMENT - FIXED VERSION
+// ============================================
+function loadUsers() {
+  users = [];
+  const saved = localStorage.getItem('mb800_users');
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      users = Array.isArray(parsed) ? parsed : [];
+    } catch(e) {
+      users = [];
+    }
+  }
+  if (!Array.isArray(users)) {
+    users = [];
+  }
+  if (users.length === 0) {
+    users = [{ name: 'Gast', stats: {}, created: Date.now() }];
+    saveUsers();
+  }
+}
+
+function saveUsers() {
+  localStorage.setItem('mb800_users', JSON.stringify(users));
+}
+
+function addUser(name) {
+  if (!name || typeof name !== 'string' || !name.trim()) return false;
+  if (users.some(u => u && u.name === name)) return false;
+  users.push({ name: name.trim(), stats: {}, created: Date.now() });
+  saveUsers();
+  return true;
+}
+
+function deleteUser(name) {
+  users = users.filter(u => u && u.name !== name);
+  if (activeUser && activeUser.name === name) activeUser = null;
+  saveUsers();
+}
+
+function setActiveUser(name) {
+  activeUser = users.find(u => u && u.name === name);
+  if (activeUser) {
+    localStorage.setItem('mb800_activeUser', name);
+  }
+}
+
+function getUserStats(user) {
+  if (!user) return { correct: 0, incorrect: 0, questions: {}, topics: {}, types: {} };
+  return user.stats || { correct: 0, incorrect: 0, questions: {}, topics: {}, types: {} };
+}
+
+// ============================================
+// RENDERING FUNCTIONS
+// ============================================
+function render() {
+  const app = document.getElementById('app');
+  if (!app) return;
+  switch(state.screen) {
+    case 'login': renderLogin(); break;
+    case 'menu': renderMenu(); break;
+    case 'quiz': renderQuiz(); break;
+    case 'review': renderReview(); break;
+    case 'stats': renderStats(); break;
+    case 'smart': renderSmartModes(); break;
+  }
+}
+
+function renderLogin() {
+  const userListHtml = Array.isArray(users) ? users.map(u => {
+    if (!u || !u.name) return '';
+    const stats = getUserStats(u);
+    const total = Object.keys(stats.questions || {}).length;
+    const correct = Object.values(stats.questions || {}).filter(a => a).length;
+    const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+    return `
+      <div class="user-btn" onclick="selectUser('${u.name.replace(/'/g, "\\'")}')">
+        <div class="user-avatar">${u.name.charAt(0).toUpperCase()}</div>
+        <div class="user-info">
+          <div class="user-name">${u.name}</div>
+          <div class="user-stats-line">${total} Fragen • ${correct} richtig (${pct}%)</div>
+        </div>
+        <button class="delete-user" onclick="event.stopPropagation(); deleteUserPrompt('${u.name.replace(/'/g, "\\'")}')">🗑️</button>
+      </div>
+    `;
+  }).join('') : '';
+
+  const html = `
+    <div class="login-wrap">
+      <h1 class="login-title">MB-800 <span class="accent">Exam Trainer</span></h1>
+      <p class="login-sub">Dynamics 365 Business Central</p>
+
+      <div class="changelog-toggle mb-4">
+        <button class="btn btn-secondary btn-full" onclick="toggleChangelog()">
+          📋 Was ist neu in Version 7? <span id="changelog-arrow">▼</span>
+        </button>
+        <div id="changelog-content" class="changelog-content" style="display:none;">
+          <h3>MB-800 Exam Trainer v7</h3>
+          <ul>
+            <li>Korrigierte Fragen Q11 und Q48</li>
+            <li>Neuer Hotspot-Fragetyp</li>
+            <li>UTF-8-Fix für alle Fragen</li>
+            <li>Bugfix: users.map is not a function</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="user-list">
+        ${userListHtml}
+      </div>
+
+      <div class="new-user-row">
+        <input type="text" class="new-user-input" id="newUserInput" placeholder="Neuer Benutzer..." onkeypress="if(event.key==='Enter') addNewUser()">
+        <button class="btn btn-primary" onclick="addNewUser()">+</button>
+      </div>
+
+      <div style="margin-top:24px;">
+        <button class="btn btn-primary btn-full" onclick="startWithActiveUser()" ${!activeUser ? 'disabled' : ''}>Weiter</button>
+      </div>
+    </div>
+  `;
+
+  if (app) app.innerHTML = html;
+
+  if (activeUser && Array.isArray(users)) {
+    const activeBtn = document.querySelector(`.user-btn[onclick="selectUser('${activeUser.name.replace(/'/g, "\\'")}')"]`);
+    if (activeBtn) activeBtn.classList.add('active');
+  }
+}
+
+function toggleChangelog() {
+  const content = document.getElementById('changelog-content');
+  const arrow = document.getElementById('changelog-arrow');
+  if (!content || !arrow) return;
+  if (content.style.display === 'none') {
+    content.style.display = 'block';
+    arrow.textContent = '▲';
+  } else {
+    content.style.display = 'none';
+    arrow.textContent = '▼';
+  }
+}
+
+function selectUser(name) {
+  setActiveUser(name);
+  renderLogin();
+}
+
+function addNewUser() {
+  const input = document.getElementById('newUserInput');
+  if (!input) return;
+  const name = input.value.trim();
+  if (addUser(name)) {
+    setActiveUser(name);
+    input.value = '';
+    renderLogin();
+  } else {
+    alert('Benutzername existiert bereits oder ist ungültig.');
+  }
+}
+
+function deleteUserPrompt(name) {
+  if (confirm(`Benutzer "${name}" wirklich löschen?`)) {
+    deleteUser(name);
+    if (activeUser && activeUser.name === name) activeUser = null;
+    renderLogin();
+  }
+}
+
+function startWithActiveUser() {
+  if (!activeUser && Array.isArray(users) && users.length > 0) {
+    setActiveUser(users[0].name);
+  }
+  if (activeUser) {
+    state.screen = 'menu';
+    render();
+  }
+}
+
+function renderMenu() {
+  if (!activeUser) {
+    state.screen = 'login';
+    render();
+    return;
+  }
+
+  const stats = getUserStats(activeUser);
+  const totalQuestions = Q.length;
+  const answered = Object.keys(stats.questions || {}).length;
+  const correct = Object.values(stats.questions || {}).filter(a => a).length;
+  const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+
+  const topicCounts = {};
+  Q.forEach(q => {
+    topicCounts[q.topic] = (topicCounts[q.topic] || 0) + 1;
+  });
+
+  const typeCounts = {};
+  Q.forEach(q => {
+    typeCounts[q.type] = (typeCounts[q.type] || 0) + 1;
+  });
+
+  const html = `
+    <div>
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px;">
+        <div>
+          <h1>MB-800 <span class="accent">Exam Trainer</span></h1>
+          <p class="subtitle">Angemeldet als: <strong>${activeUser.name}</strong></p>
+        </div>
+        <button class="btn btn-secondary" onclick="logout()">↩ Abmelden</button>
+      </div>
+
+      <div class="stat-grid mb-6">
+        <div class="stat-card">
+          <div class="stat-val">${totalQuestions}</div>
+          <div class="stat-label">Fragen gesamt</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">${answered}</div>
+          <div class="stat-label">Beantwortet</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" style="color:var(--green);">${correct}</div>
+          <div class="stat-label">Richtig</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">${pct}%</div>
+          <div class="stat-label">Erfolgsquote</div>
+        </div>
+      </div>
+
+      <div class="start-grid mb-6">
+        <button class="start-btn practice" onclick="startSmartMode()">
+          <div class="title">🎯 Intelligentes Üben</div>
+          <div class="desc">Empfohlene Fragen</div>
+        </button>
+        <button class="start-btn practice" onclick="startPractice()">
+          <div class="title">📚 Übungsmodus</div>
+          <div class="desc">Mit Feedback</div>
+        </button>
+        <button class="start-btn exam" onclick="startExam()">
+          <div class="title">📝 Prüfungssimulation</div>
+          <div class="desc">100 Minuten Timer</div>
+        </button>
+        <button class="start-btn practice" onclick="showStats()">
+          <div class="title">📊 Statistiken</div>
+          <div class="desc">Auswertung</div>
+        </button>
+      </div>
+
+      <div class="settings mb-6">
+        <div class="section-title mb-3">Themen Filter</div>
+        <div class="topic-grid">
+          ${Object.entries(topicNames).map(([key, name]) => {
+            const count = topicCounts[key] || 0;
+            const isActive = config.topics.includes(key);
+            return `
+              <button class="topic-btn ${isActive ? 'active' : ''}" onclick="toggleTopic('${key}')">
+                <div class="topic-row">
+                  <span class="name">${name}</span>
+                  <span class="count">${count}</span>
+                </div>
+              </button>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
+      <div class="settings mb-6">
+        <div class="section-title mb-3">Fragetypen Filter</div>
+        <div class="filter-row">
+          ${Object.entries(typeNames).map(([key, name]) => {
+            const count = typeCounts[key] || 0;
+            const isActive = config.types.includes(key);
+            return `
+              <span class="badge badge-${key} badge-filter ${isActive ? 'active' : ''}" onclick="toggleType('${key}')">
+                ${name} (${count})
+              </span>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
+      <div class="settings mb-6">
+        <div class="section-title mb-3">Einstellungen</div>
+        <label>
+          <input type="checkbox" ${config.shuffle ? 'checked' : ''} onclick="config.shuffle=!config.shuffle;renderMenu()">
+          Fragen mischen
+        </label>
+        <label>
+          <input type="checkbox" ${config.showExplain ? 'checked' : ''} onclick="config.showExplain=!config.showExplain">
+          Erklärungen anzeigen
+        </label>
+        <label>
+          Fragenanzahl:
+          <select onchange="config.questionCount=parseInt(this.value)">
+            <option value="10" ${config.questionCount===10?'selected':''}>10</option>
+            <option value="20" ${config.questionCount===20?'selected':''}>20</option>
+            <option value="50" ${config.questionCount===50?'selected':''}>50</option>
+            <option value="999" ${config.questionCount===999?'selected':''}>Alle (${Q.length})</option>
+          </select>
+        </label>
+      </div>
+
+      <div style="margin-top:24px;">
+        <button class="btn btn-secondary btn-full" onclick="resetAll()">🔄 Alle Filter zurücksetzen</button>
+      </div>
+    </div>
+  `;
+
+  if (document.getElementById('app')) {
+    document.getElementById('app').innerHTML = html;
+  }
+}
+
+function toggleTopic(topic) {
+  const idx = config.topics.indexOf(topic);
+  if (idx > -1) config.topics.splice(idx, 1);
+  else config.topics.push(topic);
+  renderMenu();
+}
+
+function toggleType(type) {
+  const idx = config.types.indexOf(type);
+  if (idx > -1) config.types.splice(idx, 1);
+  else config.types.push(type);
+  renderMenu();
+}
+
+function resetAll() {
+  config.topics = [];
+  config.types = [];
+  config.shuffle = true;
+  config.showExplain = true;
+  config.questionCount = 10;
+  renderMenu();
+}
+
+function logout() {
+  activeUser = null;
+  localStorage.removeItem('mb800_activeUser');
+  state.screen = 'login';
+  render();
+}
+
+function startSmartMode() {
+  const stats = getUserStats(activeUser);
+
+  const modes = [
+    {
+      id: 'new',
+      name: '🆕 Neue Fragen',
+      desc: 'Noch nicht beantwortet',
+      icon: '🆕',
+      getQuestions: () => Q.filter(q => !stats.questions[q.id])
+    },
+    {
+      id: 'errors',
+      name: '🔴 Häufigste Fehler',
+      desc: 'Am häufigsten falsch',
+      icon: '🔴',
+      getQuestions: () => {
+        const wrong = Object.entries(stats.questions || {}).filter(([id, correct]) => !correct).map(([id]) => parseInt(id));
+        return Q.filter(q => wrong.includes(q.id));
+      }
+    }
+  ];
+
+  let html = `
+    <div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h1>Intelligente Übungsmodi</h1>
+        <button class="btn btn-secondary" onclick="state.screen='menu';render()">↩ Zurück</button>
+      </div>
+      <div class="smart-grid">
+  `;
+
+  modes.forEach(mode => {
+    const questions = mode.getQuestions();
+    const count = Math.min(questions.length, config.questionCount === 999 ? questions.length : config.questionCount);
+    const disabled = count === 0;
+    html += `
+        <button class="smart-btn ${disabled ? 'disabled' : ''}" onclick="${disabled ? '' : `startSmart('${mode.id}')`}">
+          <div class="s-icon">${mode.icon}</div>
+          <div class="s-title">${mode.name}</div>
+          <div class="s-desc">${mode.desc} (${count} Fragen)</div>
+        </button>
+    `;
+  });
+
+  html += `
+      </div>
+      <div style="margin-top:24px;">
+        <button class="btn btn-secondary btn-full" onclick="state.screen='menu';render()">Abbrechen</button>
+      </div>
+    </div>
+  `;
+
+  if (document.getElementById('app')) {
+    document.getElementById('app').innerHTML = html;
+  }
+  state.screen = 'smart';
+}
+
+function startSmart(modeId) {
+  config.smartMode = modeId;
+  startQuiz();
+}
+
+function startPractice() {
+  examMode = false;
+  startQuiz();
+}
+
+function startExam() {
+  examMode = true;
+  examStartTime = Date.now();
+  timeLeft = 60 * 100;
+  startQuiz();
+  startExamTimer();
+}
+
+function startQuiz() {
+  let filtered = [...Q];
+
+  if (config.topics.length > 0) {
+    filtered = filtered.filter(q => config.topics.includes(q.topic));
+  }
+
+  if (config.types.length > 0) {
+    filtered = filtered.filter(q => config.types.includes(q.type));
+  }
+
+  if (config.smartMode) {
+    const modes = {
+      'new': () => filtered.filter(q => !getUserStats(activeUser).questions[q.id]),
+      'errors': () => {
+        const stats = getUserStats(activeUser);
+        const wrong = Object.entries(stats.questions || {}).filter(([id, c]) => !c).map(([id]) => parseInt(id));
+        return filtered.filter(q => wrong.includes(q.id));
+      }
+    };
+    if (modes[config.smartMode]) {
+      filtered = modes[config.smartMode]();
+    }
+  }
+
+  if (config.questionCount !== 999) {
+    filtered = filtered.slice(0, config.questionCount);
+  }
+
+  if (config.shuffle) {
+    filtered = filtered.sort(() => Math.random() - 0.5);
+  }
+
+  pool = filtered;
+  currentIndex = 0;
+  userAnswers = {};
+  score = 0;
+  state.mode = 'quiz';
+  state.screen = 'quiz';
+
+  loadQuestion();
+}
+
+function loadQuestion() {
+  if (currentIndex >= pool.length) {
+    finishQuiz();
+    return;
+  }
+
+  currentQ = pool[currentIndex];
+  const stats = getUserStats(activeUser);
+  const prevAnswer = (stats.questions || {})[currentQ?.id];
+
+  let html = `
+    <div>
+      <div class="topbar">
+        <button class="topbar-quit" onclick="confirmQuit()">↩ Abbrechen</button>
+        <div class="topbar-score ${score >= currentIndex * 0.7 ? 'good' : score >= currentIndex * 0.5 ? '' : 'mid'}">
+          Frage ${currentIndex + 1} von ${pool.length} • ${score} Punkte
+        </div>
+        ${examMode ? '<div class="timer" id="examTimer">⏳ 100:00</div>' : ''}
+      </div>
+
+      <div class="progress-track">
+        <div class="progress-fill" style="width:${(currentIndex / pool.length) * 100}%"></div>
+      </div>
+
+      <div id="question-container">
+        <div class="question-text">${currentQ.text}</div>
+      </div>
+
+      <div id="options-container"></div>
+
+      <div class="btn-row" style="margin-top:20px;">
+        <button class="btn btn-secondary" onclick="previousQuestion()" ${currentIndex === 0 ? 'disabled' : ''}>← Zurück</button>
+        <button class="btn btn-primary" onclick="checkAnswer()" id="submitBtn">Antwort prüfen</button>
+        <button class="btn btn-secondary" onclick="nextQuestion()">Weiter →</button>
+      </div>
+    </div>
+  `;
+
+  if (document.getElementById('app')) {
+    document.getElementById('app').innerHTML = html;
+  }
+
+  renderOptions(currentQ, prevAnswer);
+
+  if (examMode) updateExamTimer();
+}
+
+function renderOptions(q, prevAnswer) {
+  const container = document.getElementById('options-container');
+  if (!container) return;
+
+  switch(q.type) {
+    case 'single':
+      container.innerHTML = q.options.map(opt => {
+        const isSelected = prevAnswer === opt.l;
+        return `
+          <div class="option ${isSelected ? 'selected' : ''}" onclick="selectOption('${q.id}', '${opt.l}')">
+            <div class="option-letter">${opt.l}</div>
+            <div class="option-text">${opt.t}</div>
+          </div>
+        `;
+      }).join('');
+      break;
+
+    case 'multi':
+      container.innerHTML = q.options.map(opt => {
+        const isSelected = prevAnswer?.includes(opt.l);
+        const isDimmed = userAnswers[q.id] && userAnswers[q.id].length >= q.answer.length && !isSelected;
+        return `
+          <div class="option ${isSelected ? 'selected' : ''} ${isDimmed ? 'dimmed' : ''}" onclick="toggleOption('${q.id}', '${opt.l}')">
+            <div class="option-letter">${opt.l}</div>
+            <div class="option-text">${opt.t}</div>
+          </div>
+        `;
+      }).join('');
+      break;
+
+    case 'hotspot':
+      container.innerHTML = `
+        <div class="hotspot-container">
+          ${q.image ? `<img src="${q.image}" class="hotspot-image" alt="Hotspot Question" />` : ''}
+          ${q.hotspotAreas?.map(area => `
+            <div class="hotspot-area" style="left:${area.x}px;top:${area.y}px;width:${area.width}px;height:${area.height}px;"
+                 onclick="selectHotspot('${area.id}', '${q.id}')"
+                 id="hotspot-${q.id}-${area.id}">
+              <div class="hotspot-label" style="top:-20px;left:0;">${area.label}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      break;
+  }
+}
+
+function selectOption(qId, option) {
+  userAnswers[qId] = option;
+  renderOptions(Q.find(q => q.id == qId), option);
+}
+
+function toggleOption(qId, option) {
+  if (!userAnswers[qId]) userAnswers[qId] = [];
+  const idx = userAnswers[qId].indexOf(option);
+  if (idx > -1) {
+    userAnswers[qId].splice(idx, 1);
+  } else {
+    if (userAnswers[qId].length < Q.find(q => q.id == qId).answer.length) {
+      userAnswers[qId].push(option);
+    }
+  }
+  renderOptions(Q.find(q => q.id == qId));
+}
+
+function selectHotspot(areaId, questionId) {
+  if (!userAnswers[questionId]) userAnswers[questionId] = [];
+  userAnswers[questionId] = [areaId];
+
+  document.querySelectorAll(`.hotspot-area`).forEach(el => {
+    el.classList.remove('selected');
+  });
+  const selectedEl = document.getElementById(`hotspot-${questionId}-${areaId}`);
+  if (selectedEl) selectedEl.classList.add('selected');
+}
+
+function checkAnswer() {
+  if (!currentQ) return;
+
+  const q = currentQ;
+  const userAnswer = userAnswers[q.id];
+  const correctAnswer = q.answer;
+
+  let isCorrect = false;
+
+  switch(q.type) {
+    case 'single':
+      isCorrect = userAnswer === correctAnswer[0];
+      break;
+    case 'multi':
+      isCorrect = userAnswer && userAnswer.sort().join(',') === correctAnswer.sort().join(',');
+      break;
+    case 'hotspot':
+      isCorrect = userAnswer && userAnswer[0] === correctAnswer[0];
+      break;
+  }
+
+  const stats = getUserStats(activeUser);
+  if (!stats.questions) stats.questions = {};
+  stats.questions[q.id] = isCorrect;
+
+  if (!stats.topics) stats.topics = {};
+  if (!stats.topics[q.topic]) stats.topics[q.topic] = { correct: 0, total: 0 };
+  stats.topics[q.topic].total++;
+  if (isCorrect) stats.topics[q.topic].correct++;
+
+  if (!stats.types) stats.types = {};
+  if (!stats.types[q.type]) stats.types[q.type] = { correct: 0, total: 0 };
+  stats.types[q.type].total++;
+  if (isCorrect) stats.types[q.type].correct++;
+
+  users.find(u => u && u.name === activeUser.name).stats = stats;
+  saveUsers();
+
+  if (isCorrect) {
+    score++;
+    if (!examMode) {
+      document.getElementById('options-container').innerHTML += `
+        <div class="explain pass mb-4">
+          <div class="explain-header">✅ Richtig!</div>
+          <div class="explain-body">${q.explain || 'Deine Antwort ist korrekt.'}</div>
+        </div>
+      `;
+    }
+  } else {
+    if (!examMode) {
+      document.getElementById('options-container').innerHTML += `
+        <div class="explain fail mb-4">
+          <div class="explain-header">❌ Falsch</div>
+          <div class="explain-body">${q.explain || 'Versuche es noch einmal.'}</div>
+        </div>
+      `;
+    }
+  }
+
+  highlightAnswers(q, isCorrect);
+  disableOptions();
+
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('submitBtn').textContent = 'Weiter →';
+
+  if (examMode) {
+    setTimeout(() => nextQuestion(), 1500);
+  }
+}
+
+function highlightAnswers(q, isCorrect) {
+  switch(q.type) {
+    case 'single':
+      document.querySelectorAll('.option').forEach(opt => {
+        const letter = opt.querySelector('.option-letter').textContent;
+        if (q.answer.includes(letter)) {
+          opt.classList.add('correct');
+        } else if (userAnswers[q.id] === letter) {
+          opt.classList.add('wrong');
+        }
+      });
+      break;
+    case 'multi':
+      document.querySelectorAll('.option').forEach(opt => {
+        const letter = opt.querySelector('.option-letter').textContent;
+        if (q.answer.includes(letter)) {
+          opt.classList.add('correct');
+        } else if (userAnswers[q.id]?.includes(letter)) {
+          opt.classList.add('wrong');
+        }
+      });
+      break;
+    case 'hotspot':
+      document.querySelectorAll('.hotspot-area').forEach(area => {
+        const areaId = area.id.split('-').pop();
+        if (q.answer.includes(areaId)) {
+          area.classList.add('correct');
+        } else if (userAnswers[q.id]?.includes(areaId)) {
+          area.classList.add('wrong');
+        }
+      });
+      break;
+  }
+}
+
+function disableOptions() {
+  document.querySelectorAll('.option, .hotspot-area').forEach(el => {
+    el.classList.add('locked');
+    el.style.cursor = 'default';
+  });
+}
+
+function nextQuestion() {
+  if (currentIndex < pool.length - 1) {
+    currentIndex++;
+    loadQuestion();
+  } else {
+    finishQuiz();
+  }
+}
+
+function previousQuestion() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    loadQuestion();
+  }
+}
+
+function confirmQuit() {
+  if (confirm('Möchtest du die aktuelle Sitzung wirklich abbrechen?')) {
+    state.screen = 'menu';
+    state.mode = '';
+    render();
+  }
+}
+
+function finishQuiz() {
+  state.mode = '';
+  state.screen = 'review';
+
+  if (examMode) {
+    clearInterval(timer);
+    const timeTaken = (Date.now() - examStartTime) / 1000 / 60;
+    const examScore = Math.round((score / pool.length) * 1000);
+
+    let html = `
+      <div>
+        <h1 class="text-center mb-4">Prüfung beendet!</h1>
+        <div class="stat-grid mb-6">
+          <div class="stat-card">
+            <div class="stat-val">${score}</div>
+            <div class="stat-label">Punkte</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val">${examScore}</div>
+            <div class="stat-label">/ 1000</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val">${Math.round(timeTaken)}</div>
+            <div class="stat-label">Minuten</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val" style="color:${examScore >= 700 ? 'var(--green)' : 'var(--red)'};">${examScore >= 700 ? 'Bestanden!' : 'Durchgefallen'}</div>
+            <div class="stat-label">Ergebnis</div>
+          </div>
+        </div>
+        <div class="text-center mb-6">
+          <p style="font-size:16px;">
+            ${examScore >= 700 ? 'Herzlichen Glückwunsch! Du hast die Prüfung bestanden.' : 'Leider nicht bestanden. Versuche es noch einmal.'}
+          </p>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary btn-full" onclick="state.screen='review';render();">Ergebnisse anzeigen</button>
+        </div>
+        <div class="btn-row" style="margin-top:12px;">
+          <button class="btn btn-secondary btn-full" onclick="state.screen='menu';render();">Zurück zum Menü</button>
+        </div>
+      </div>
+    `;
+    if (document.getElementById('app')) {
+      document.getElementById('app').innerHTML = html;
+    }
+    return;
+  }
+
+  renderReview();
+}
+
+function renderReview() {
+  const stats = getUserStats(activeUser);
+  const correctCount = Object.values(stats.questions || {}).filter(a => a).length;
+  const totalCount = Object.keys(stats.questions || {}).length;
+  const pct = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 0;
+
+  let html = `
+    <div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h1>Ergebnisse</h1>
+        <button class="btn btn-secondary" onclick="state.screen='menu';render()">↩ Menü</button>
+      </div>
+
+      <div class="stat-grid mb-6">
+        <div class="stat-card">
+          <div class="stat-val">${score}</div>
+          <div class="stat-label">Punkte</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">${pool.length}</div>
+          <div class="stat-label">Fragen</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" style="color:var(--green);">${Math.round((score / pool.length) * 100)}%</div>
+          <div class="stat-label">Erfolgsquote</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">${pct}%</div>
+          <div class="stat-label">Gesamt</div>
+        </div>
+      </div>
+
+      <div class="section-title mb-3">Fragenübersicht</div>
+      <div id="review-list">
+  `;
+
+  pool.forEach((q, idx) => {
+    const userAnswer = userAnswers[q.id];
+    const isCorrect = checkAnswerCorrect(q, userAnswer);
+
+    let answerText = '';
+    if (q.type === 'single' && userAnswer) {
+      answerText = q.options.find(o => o.l === userAnswer)?.t || userAnswer;
+    } else if (q.type === 'multi' && userAnswer?.length) {
+      answerText = userAnswer.map(a => q.options.find(o => o.l === a)?.t || a).join(', ');
+    } else if (q.type === 'hotspot' && userAnswer?.length) {
+      answerText = q.hotspotAreas?.find(a => a.id === userAnswer[0])?.label || userAnswer[0];
+    }
+
+    html += `
+        <div class="review-item ${isCorrect ? 'pass' : 'fail'}" onclick="showReviewDetail(${q.id})">
+          <div style="width:24px;height:24px;border-radius:6px;background:${isCorrect ? 'var(--green)' : 'var(--red)'};display:flex;align-items:center;justify-content:center;color:#09090b;font-weight:bold;">${isCorrect ? '✓' : '✗'}</div>
+          <div style="flex:1;">
+            <div class="review-text">${q.text.substring(0, 100)}${q.text.length > 100 ? '...' : ''}</div>
+            <div class="review-answers">${answerText.substring(0, 50)}${answerText.length > 50 ? '...' : ''}</div>
+          </div>
+        </div>
+    `;
+  });
+
+  html += `
+      </div>
+
+      <div id="review-detail" style="display:none;"></div>
+
+      <div style="margin-top:24px;">
+        <button class="btn btn-secondary btn-full" onclick="state.screen='menu';render();">Zurück zum Menü</button>
+      </div>
+    </div>
+  `;
+
+  if (document.getElementById('app')) {
+    document.getElementById('app').innerHTML = html;
+  }
+}
+
+function checkAnswerCorrect(q, userAnswer) {
+  if (!userAnswer) return false;
+
+  switch(q.type) {
+    case 'single': return userAnswer === q.answer[0];
+    case 'multi': return userAnswer.sort().join(',') === q.answer.sort().join(',');
+    case 'hotspot': return userAnswer[0] === q.answer[0];
+    default: return false;
+  }
+}
+
+function showReviewDetail(qId) {
+  const q = Q.find(q => q.id === qId);
+  if (!q) return;
+
+  const userAnswer = userAnswers[q.id];
+  const isCorrect = checkAnswerCorrect(q, userAnswer);
+
+  let answerDisplay = '';
+  switch(q.type) {
+    case 'single':
+      answerDisplay = q.options.map(opt => {
+        const selected = userAnswer === opt.l;
+        const correct = q.answer.includes(opt.l);
+        return `<div class="option ${selected ? 'selected' : ''} ${correct ? 'correct' : ''} ${selected && !correct ? 'wrong' : ''} locked">
+          <div class="option-letter">${opt.l}</div>
+          <div class="option-text">${opt.t}</div>
+        </div>`;
+      }).join('');
+      break;
+    case 'multi':
+      answerDisplay = q.options.map(opt => {
+        const selected = userAnswer?.includes(opt.l);
+        const correct = q.answer.includes(opt.l);
+        return `<div class="option ${selected ? 'selected' : ''} ${correct ? 'correct' : ''} ${selected && !correct ? 'wrong' : ''} locked">
+          <div class="option-letter">${opt.l}</div>
+          <div class="option-text">${opt.t}</div>
+        </div>`;
+      }).join('');
+      break;
+    case 'hotspot':
+      answerDisplay = `
+        <div class="hotspot-container">
+          ${q.image ? `<img src="${q.image}" class="hotspot-image" alt="Hotspot Question" />` : ''}
+          ${q.hotspotAreas?.map(area => {
+            const isSelected = userAnswer?.[0] === area.id;
+            const isCorrect = q.answer.includes(area.id);
+            return `
+              <div class="hotspot-area ${isSelected ? 'selected' : ''} ${isCorrect ? 'correct' : ''} ${isSelected && !isCorrect ? 'wrong' : ''} locked"
+                   style="left:${area.x}px;top:${area.y}px;width:${area.width}px;height:${area.height}px;">
+                <div class="hotspot-label" style="top:-20px;left:0;">${area.label}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+      break;
+  }
+
+  const html = `
+    <div class="review-detail">
+      <h3>Frage #${q.id} (${topicNames[q.topic] || q.topic})</h3>
+      <div class="question-text">${q.text}</div>
+
+      <div class="section-title mb-3">Deine Antwort${q.type === 'multi' ? 'en' : ''}</div>
+      <div style="margin-bottom:16px;">${answerDisplay}</div>
+
+      <div class="section-title mb-3">Erklärung</div>
+      <div class="explain ${isCorrect ? 'pass' : 'fail'}">
+        <div class="explain-body">${q.explain || 'Keine Erklärung verfügbar.'}</div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <button class="btn btn-secondary" onclick="document.getElementById('review-detail').style.display='none'">Schließen</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('review-detail').innerHTML = html;
+  document.getElementById('review-detail').style.display = 'block';
+  document.getElementById('review-detail').scrollIntoView({ behavior: 'smooth' });
+}
+
+function showStats() {
+  const stats = getUserStats(activeUser);
+
+  const total = Object.keys(stats.questions || {}).length;
+  const correct = Object.values(stats.questions || {}).filter(a => a).length;
+  const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+  const topicStats = {};
+  Object.entries(stats.questions || {}).forEach(([qId, isCorrect]) => {
+    const q = Q.find(q => q.id == qId);
+    if (q) {
+      if (!topicStats[q.topic]) topicStats[q.topic] = { correct: 0, total: 0 };
+      topicStats[q.topic].total++;
+      if (isCorrect) topicStats[q.topic].correct++;
+    }
+  });
+
+  const typeStats = {};
+  Object.entries(stats.questions || {}).forEach(([qId, isCorrect]) => {
+    const q = Q.find(q => q.id == qId);
+    if (q) {
+      if (!typeStats[q.type]) typeStats[q.type] = { correct: 0, total: 0 };
+      typeStats[q.type].total++;
+      if (isCorrect) typeStats[q.type].correct++;
+    }
+  });
+
+  let html = `
+    <div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h1>Statistiken</h1>
+        <button class="btn btn-secondary" onclick="state.screen='menu';render()">↩ Zurück</button>
+      </div>
+
+      <div class="stat-grid mb-6">
+        <div class="stat-card">
+          <div class="stat-val">${total}</div>
+          <div class="stat-label">Beantwortet</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" style="color:var(--green);">${correct}</div>
+          <div class="stat-label">Richtig</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">${pct}%</div>
+          <div class="stat-label">Erfolgsquote</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">${Q.length}</div>
+          <div class="stat-label">Fragen insgesamt</div>
+        </div>
+      </div>
+
+      <div class="section-title mb-3">Erfolgsquote nach Thema</div>
+      <div class="topic-grid mb-6">
+  `;
+
+  Object.entries(topicNames).forEach(([key, name]) => {
+    const ts = topicStats[key] || { correct: 0, total: 0 };
+    const tPct = ts.total > 0 ? Math.round((ts.correct / ts.total) * 100) : 0;
+    const count = Q.filter(q => q.topic === key).length;
+    html += `
+        <div class="topic-btn">
+          <div class="topic-row">
+            <span class="name">${name}</span>
+            <span class="count" style="color:${tPct >= 70 ? 'var(--green)' : tPct >= 50 ? 'var(--amber)' : 'var(--red)'};">${tPct}%</span>
+          </div>
+          <div style="font-size:11px;color:var(--text3);">${ts.correct}/${ts.total} • ${count} Fragen</div>
+        </div>
+    `;
+  });
+
+  html += `
+      </div>
+
+      <div class="section-title mb-3">Erfolgsquote nach Fragetyp</div>
+      <div class="filter-row mb-6">
+  `;
+
+  Object.entries(typeNames).forEach(([key, name]) => {
+    const ts = typeStats[key] || { correct: 0, total: 0 };
+    const tPct = ts.total > 0 ? Math.round((ts.correct / ts.total) * 100) : 0;
+    const count = Q.filter(q => q.type === key).length;
+    html += `
+        <span class="badge badge-${key}" style="margin-bottom:4px;display:block;">
+          ${name}: ${tPct}% (${ts.correct}/${ts.total}) • ${count} Fragen
+        </span>
+    `;
+  });
+
+  html += `
+      </div>
+
+      <div style="margin-top:24px;">
+        <button class="btn btn-secondary btn-full" onclick="state.screen='menu';render()">Zurück zum Menü</button>
+      </div>
+    </div>
+  `;
+
+  if (document.getElementById('app')) {
+    document.getElementById('app').innerHTML = html;
+  }
+  state.screen = 'stats';
+}
+
+function startExamTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    updateExamTimer();
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      finishQuiz();
+    }
+  }, 1000);
+}
+
+function updateExamTimer() {
+  if (!examMode) return;
+  const timerEl = document.getElementById('examTimer');
+  if (!timerEl) return;
+
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  timerEl.textContent = `⏳ ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+  if (timeLeft <= 300) {
+    timerEl.classList.add('warning');
+  }
+}
+
+// ============================================
+// INITIALIZATION
+// ============================================
+function init() {
+  loadUsers();
+
+  const savedUser = localStorage.getItem('mb800_activeUser');
+  if (savedUser) {
+    setActiveUser(savedUser);
+  }
+
+  state.screen = 'login';
+  render();
+}
+
+init();
+</script>
+</body>
+</html>
