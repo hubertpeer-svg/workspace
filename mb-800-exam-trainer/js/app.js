@@ -541,13 +541,13 @@ function renderOptions(q, prevAnswer) {
 
     case 'hotspot':
       container.innerHTML = `
-        <div class="hotspot-container">
-          ${q.image ? `<img src="${q.image}" class="hotspot-image" alt="Hotspot Question" />` : ''}
+        <div class="hotspot-card-hint">👆 Klicke auf das richtige Feld</div>
+        <div class="hotspot-card-list">
           ${q.hotspotAreas?.map(area => `
-            <div class="hotspot-area" style="left:${area.x}px;top:${area.y}px;width:${area.width}px;height:${area.height}px;"
-                 onclick="selectHotspot('${area.id}', '${q.id}')"
+            <div class="hotspot-card" onclick="selectHotspot('${area.id}', '${q.id}')"
                  id="hotspot-${q.id}-${area.id}">
-              <div class="hotspot-label" style="top:-20px;left:0;">${area.label}</div>
+              <span class="hotspot-card-icon">☐</span>
+              <span class="hotspot-card-text">${area.label}</span>
             </div>
           `).join('')}
         </div>
@@ -661,11 +661,15 @@ function selectHotspot(areaId, questionId) {
   if (!userAnswers[questionId]) userAnswers[questionId] = [];
   userAnswers[questionId] = [areaId];
 
-  document.querySelectorAll('.hotspot-area').forEach(el => {
+  document.querySelectorAll('.hotspot-card').forEach(el => {
     el.classList.remove('selected');
+    el.querySelector('.hotspot-card-icon').textContent = '☐';
   });
   const selectedEl = document.getElementById(`hotspot-${questionId}-${areaId}`);
-  if (selectedEl) selectedEl.classList.add('selected');
+  if (selectedEl) {
+    selectedEl.classList.add('selected');
+    selectedEl.querySelector('.hotspot-card-icon').textContent = '☑';
+  }
 }
 
 function checkAnswer() {
@@ -734,12 +738,15 @@ function highlightAnswers(q, isCorrect) {
       });
       break;
     case 'hotspot':
-      document.querySelectorAll('.hotspot-area').forEach(area => {
-        const areaId = area.id.split('-').pop();
-        if (q.answer.includes(areaId)) {
-          area.classList.add('correct');
-        } else if (userAnswers[q.id]?.includes(areaId)) {
-          area.classList.add('wrong');
+      document.querySelectorAll('.hotspot-card').forEach(card => {
+        const cardId = card.id.split('-').pop();
+        const icon = card.querySelector('.hotspot-card-icon');
+        if (q.answer.includes(cardId)) {
+          card.classList.add('correct');
+          if (icon) icon.textContent = '✓';
+        } else if (userAnswers[q.id]?.includes(cardId)) {
+          card.classList.add('wrong');
+          if (icon) icon.textContent = '✗';
         }
       });
       break;
@@ -747,7 +754,7 @@ function highlightAnswers(q, isCorrect) {
 }
 
 function disableOptions() {
-  document.querySelectorAll('.option, .hotspot-area, .ordering-item').forEach(el => {
+  document.querySelectorAll('.option, .hotspot-card, .ordering-item').forEach(el => {
     el.classList.add('locked');
     el.style.cursor = 'default';
   });
@@ -978,15 +985,16 @@ function showReviewDetail(qId) {
       break;
     case 'hotspot':
       answerDisplay = `
-        <div class="hotspot-container">
-          ${q.image ? `<img src="${q.image}" class="hotspot-image" alt="Hotspot Question" />` : ''}
+        <div class="hotspot-card-list">
           ${q.hotspotAreas?.map(area => {
             const isSelected = userAnswer?.[0] === area.id;
             const isCorrect = q.answer.includes(area.id);
+            const cls = isCorrect ? 'correct' : (isSelected && !isCorrect ? 'wrong' : '');
+            const icon = isCorrect ? '✓' : (isSelected && !isCorrect ? '✗' : '☐');
             return `
-              <div class="hotspot-area ${isSelected ? 'selected' : ''} ${isCorrect ? 'correct' : ''} ${isSelected && !isCorrect ? 'wrong' : ''} locked"
-                   style="left:${area.x}px;top:${area.y}px;width:${area.width}px;height:${area.height}px;">
-                <div class="hotspot-label" style="top:-20px;left:0;">${area.label}</div>
+              <div class="hotspot-card ${cls} locked">
+                <span class="hotspot-card-icon">${icon}</span>
+                <span class="hotspot-card-text">${area.label}</span>
               </div>
             `;
           }).join('')}
