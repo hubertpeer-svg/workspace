@@ -89,7 +89,7 @@
   .option.selected .option-letter { background:var(--amber); color:#ffffff; }
   .option.correct .option-letter { background:var(--green); color:#ffffff; }
   .option.wrong .option-letter { background:var(--red); color:#ffffff; }
-  .option-text { font-size:14px; line-height:1.5; padding-top:3px; color:#e4e4e7; }
+  .option-text { font-size:14px; line-height:1.5; padding-top:3px; color:var(--text); }
 
   /* Ordering styles */
   .ordering-item { width:100%; text-align:left; padding:14px 16px; border-radius:12px; border:2px solid var(--border); background:var(--surface2); margin-bottom:8px; display:flex; align-items:center; gap:12px; transition:all .2s; user-select:none; }
